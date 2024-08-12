@@ -75,10 +75,12 @@
 
 		<?php
 			$courseCols    	= (isset($settings['etlms_course_carousel_column']) && $settings['etlms_course_carousel_column']) ? (int) $settings['etlms_course_carousel_column'] : 3;
-			$layout 		= isset($settings['course_carousel_skin']) ? $settings['course_carousel_skin'] : 'card';
+			$layout         = esc_attr( $settings['course_carousel_skin'] );
+			$in_array       = in_array( $layout, array( 'classic', 'card', 'stacked', 'overlayed' ), true);
+			$layout 		= isset( $layout ) && $in_array ? $layout : 'card';
 		?>
 
-		<div class="etlms-carousel-loop-wrap tutor-courses tutor-courses-loop-wrap tutor-courses-layout-<?php echo $courseCols; ?> etlms-coursel-<?php echo esc_attr( $settings['course_carousel_skin'] ); ?> etlms-carousel-dots-<?php echo esc_attr( $settings['course_carousel_dots_position'] ); ?>" id="etlms-slick-responsive">
+		<div class="etlms-carousel-loop-wrap tutor-courses tutor-courses-loop-wrap tutor-courses-layout-<?php echo $courseCols; ?> etlms-coursel-<?php echo $layout ?> etlms-carousel-dots-<?php echo esc_attr( $settings['course_carousel_dots_position'] ); ?>" id="etlms-slick-responsive">
 			<?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
 				<div class="<?php tutor_course_loop_col_classes(); ?>">
 					<?php include etlms_get_template( 'course/carousel/' . $layout ); ?>
