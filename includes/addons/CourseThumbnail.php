@@ -18,6 +18,17 @@ class CourseThumbnail extends BaseAddon {
     public function get_title() {
         return __('Course Thumbnail', 'tutor-lms-elementor-addons');
     }
+
+    /**
+	 * Dependent scripts
+	 *
+	 * @return array, contains name of dependent script
+	 */
+	public function get_script_depends() {
+		return array(
+			'etlms-course-topics',
+		);
+	}
     
     protected function register_style_controls() {
         $selector = '{{WRAPPER}} .tutor-course-thumbnail';
@@ -145,7 +156,7 @@ class CourseThumbnail extends BaseAddon {
     protected function render($instance = []) {
         $course = etlms_get_course();
         if ($course) {
-            echo "<div class='tutor-course-thumbnail'>";
+            echo "<div class='tutor-course-thumbnail tutor-course-details-page'>";
             if(tutils()->has_video_in_single()){
                 tutor_course_video();
             } else{

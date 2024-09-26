@@ -1,94 +1,61 @@
 'use strict';
 (function ($) {
-	/**
-	 * Course Enroll Button
-	 * @since 1.0.0
-	 */
-	function enroll_button($scope) {
-		/**
-		 * if default button 
-		 * add button class
-		 */
-		var button_type = $scope.find("#etlms_enroll_btn_type").val();
-		var cart_icon = $scope.find("#etlms_enroll_btn_cart").val();
-
-		/**
-		 * find tutor-loop-cart-btn-wrap from etlms-carousel-footer
-		 * remove class for setting new style
-		 */
-		var carousel_footer = $scope.find(".etlms-carousel-footer").find('.tutor-loop-cart-btn-wrap');
-
-		if (carousel_footer) {
-			carousel_footer.removeClass('tutor-loop-cart-btn-wrap');
-			carousel_footer.addClass('etlms-loop-cart-btn-wrap');
-			/**
-			 * add to cart has default button class
-			 * remove it
-			 * make it dynamic from elementor
-			 */
-			if (carousel_footer.children("a").hasClass('button')) {
-				carousel_footer.children("a").removeClass('button');
-			};
-		}
-
-		/**
-		 * if default button 
-		 * add button class
-		 */
-		if (button_type == 'default' || button_type == 'default_with_cart_icon') {
-			carousel_footer.children("a").addClass('tutor-button');
-		}
-
-		/**
-		 * if cart icon set from elementor
-		 * add cart icon to all button
-		 */
-		if (button_type == 'text_with_cart' || button_type == 'default_with_cart_icon') {
-
-			var length = carousel_footer.length;
-			var i = 0;
-			for (i; i < length; i++) {
-
-				/*
-					*check if it is add to cart
-					button then add cart icon
-				*/
-				var is_add_to_cart = carousel_footer.children("a")[i].classList.contains('add_to_cart_button');
-				var added_to_cart = carousel_footer.children("a")[i].innerHTML;
-				
-				if(is_add_to_cart)
-				{
-
-					var text = carousel_footer.children("a")[i].innerHTML;
-					carousel_footer.children("a")[i].innerHTML = `<i class="${cart_icon}" aria-hidden="true"></i> ${text}`;
-				}
-				
-				if(added_to_cart == "View Cart")
-				{
-					var text = carousel_footer.children("a")[i].innerHTML;
-					carousel_footer.children("a")[i].innerHTML = `<i class="${cart_icon}" aria-hidden="true"></i> ${text}`;
-				}
-
-			}
-		}
-	}
 
 	jQuery(window).on('elementor/frontend/init', function () {
+		elementorFrontend.hooks.addAction('frontend/element_ready/etlms-course-thumbnail.default', function ($scope, $) {
+			// remove course play and spining class
+			if (etlmsUtility.is_editor_mode) {
+				const coursePlayers = document.querySelectorAll('.course-players');
+				if (coursePlayers.length) {
+					coursePlayers.forEach( (player) => {
+						player.setAttribute('class', '');
+						const spinner = player.querySelector('.loading-spinner');
+						if (spinner) {
+							spinner.setAttribute('class', '');
+						}
+					})	
+				}
+			}
+		});
 		/**
 		 * Course Curriculum
 		 * @since 1.0.0
 		 */
 		elementorFrontend.hooks.addAction('frontend/element_ready/etlms-course-curriculum.default', function ($scope, $) {
-            var collapse_icon = $scope.find("#etlms-course-topic-collapse-icon").val();
-			var expand_icon = $scope.find("#etlms-course-topic-expand-icon").val();
-			$scope.find(".etlms-course-curriculum-title").click(function (e) {
-                var $this = $(this);
-                $this.parent().toggleClass('etlms-topic-active', 300);
-                $this.find('#etlms-course-topic-icon').toggleClass(collapse_icon+' '+expand_icon);
-				$this.parent().find(".tutor-course-lessons").animate({
-					height: 'toggle'
-				}, 300);
-			});
+			if (etlmsUtility.is_editor_mode) {
+				const accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
+				if (accordionItemHeaders) {
+					accordionItemHeaders.forEach((accordionItemHeader) => {
+						accordionItemHeader.addEventListener('click', () => {
+							accordionItemHeader.classList.toggle('is-active');
+							const accordionItemBody = accordionItemHeader.nextElementSibling;
+							if (accordionItemHeader.classList.contains('is-active')) {
+								accordionItemBody.style.maxHeight = accordionItemBody.scrollHeight + 'px';
+							} else {
+								accordionItemBody.style.maxHeight = 0;
+							}
+						});
+					});
+				}
+			}
+		});
+		elementorFrontend.hooks.addAction('frontend/element_ready/etlms-course-content.default', function ($scope, $) {
+			if (etlmsUtility.is_editor_mode) {
+				const accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
+				if (accordionItemHeaders) {
+					accordionItemHeaders.forEach((accordionItemHeader) => {
+						accordionItemHeader.addEventListener('click', () => {
+							accordionItemHeader.classList.toggle('is-active');
+							const accordionItemBody = accordionItemHeader.nextElementSibling;
+							if (accordionItemHeader.classList.contains('is-active')) {
+								accordionItemBody.style.maxHeight = accordionItemBody.scrollHeight + 'px';
+							} else {
+								accordionItemBody.style.maxHeight = 0;
+							}
+						});
+					});
+				}
+			}
 		});
 
 		/**
@@ -164,15 +131,46 @@
 				]
 			});
 
-			enroll_button($scope, $);  
 		});
 
-		/**
-		 * Course List
-		 * @since 1.0.0
-		 */
-		elementorFrontend.hooks.addAction('frontend/element_ready/etlms-course-list.default', function ($scope, $) {
-			enroll_button($scope, $);
-		});
+		// Sticky Sidebar In Course Details Page and Bundle Details Page of Elementor
+
+		const isSidebarSticky = window?.tutorElementorData?.is_sidebar_sticky ?? false;
+		let isSticky = false;
+		
+		if (isSidebarSticky) {
+			const courseSidebar = document.querySelector('.tutor-single-course-sidebar');
+			if (courseSidebar) {
+				const header = document.getElementsByTagName('header')[0];
+				const headerHeight = `${header.offsetHeight}px`;
+				const isHeaderSticky = header.classList.value.includes('sticky');
+
+				function handleScroll() {
+					const scrollFromTop = window.scrollY;
+					const SPACE_FROM_TOP = 200;
+					const isValidToStick = scrollFromTop >= SPACE_FROM_TOP;
+					const isValidDevice = window.innerWidth >= 1200;
+
+					if (isValidDevice) {
+						if (isValidToStick) {
+							if (!isSticky) {
+								courseSidebar.classList.add('tutor-elementor-sidebar-sticky');
+								const style = `max-height: 80vh; overflow-y: scroll; top: ${isHeaderSticky ? headerHeight : ''}`;
+								courseSidebar.setAttribute('style', style);
+								courseSidebar.scrollTop = 0;
+								isSticky = true;
+							}
+						} else {
+							courseSidebar.classList.remove('tutor-elementor-sidebar-sticky');
+							courseSidebar.removeAttribute('style');
+							isSticky = false;
+						}
+					}
+				}
+
+				window.addEventListener('scroll', handleScroll);
+			}
+		}
+
 	});
 })(jQuery);
