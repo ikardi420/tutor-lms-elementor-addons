@@ -150,6 +150,12 @@ class Installer {
 	 * @since 1.0.0
 	 */
 	public function install_etlms_dependency_plugin() {
+		tutor_utils()->checking_nonce();
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );	
+		}
+
 		include ABSPATH . 'wp-admin/includes/plugin-install.php';
 		include ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
