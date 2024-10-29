@@ -23,7 +23,15 @@ $share_title   = $settings['course_share_title'];
 	<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn tutor-btn-ghost etlms-course-share-btn">
 		<?php if ( isset( $settings['course_share_icon']['value'] ) && '' !== $settings['course_share_icon']['value'] ) : ?>
 			<span class="etlms-course-share-icon">
-				<?php \Elementor\Icons_Manager::render_icon( $settings['course_share_icon'], array( 'aria-hidden' => 'true' ) ); ?>
+                <?php 
+                    if ( isset( $settings['course_share_icon']['library'] ) && 'svg' === $settings['course_share_icon']['library'] ) {
+						\Elementor\Icons_Manager::render_icon( $settings['course_share_icon'], array( 'aria-hidden' => 'true' ) );
+					} else {
+						?>
+							<i aria-hidden="true" class="<?php echo esc_attr( $settings['course_share_icon']['value'] ); ?>"></i>
+						<?php
+					}
+				?>
 			</span>
 		<?php else : ?>
 			<span class="etlms-course-share-icon">
