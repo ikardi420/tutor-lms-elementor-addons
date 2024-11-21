@@ -143,9 +143,9 @@ You can post on the support section of this plugin or use the contact form at th
 == Changelog ==
 
 = 3.0.0 - 20 November, 2024
-Fix: Security vulnerabilities
-Update: Made plugin compatible with Tutor LMS v3.0
-Fix: Resolved icons not being the correct size for various course modules 
+Update: Introduced compatibility with Tutor LMS 3.0
+Fix: Resolved multiple security vulnerabilities.
+Fix: Adjusted icon sizes across all course modules.
 
 = 2.1.5 - 16 August, 2024
 Fix: Security vulnerabilities
