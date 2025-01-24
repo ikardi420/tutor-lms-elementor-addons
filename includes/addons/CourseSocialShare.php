@@ -120,7 +120,7 @@ class CourseSocialShare extends BaseAddon {
 		$this->add_control(
 			'course_share_icon_shape',
 			array(
-				'label'        => __( 'Shape', 'tutor-lms-elementor-addons' ),
+				'label'        => __( 'Icon Shape', 'tutor-lms-elementor-addons' ),
 				'type'         => Controls_Manager::SELECT,
 				'options'      => array(
 					'rounded' => __( 'Rounded', 'tutor-lms-elementor-addons' ),
@@ -150,17 +150,6 @@ class CourseSocialShare extends BaseAddon {
 			)
 		);
 
-		$this->add_control(
-			'course_social_icon_text',
-			array(
-				'label'        => __( 'Show Icon Text', 'tutor-lms-elementor-addons' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'label_on'     => __( 'Show', 'tutor-lms-elementor-addons' ),
-				'label_off'    => __( 'Hide', 'tutor-lms-elementor-addons' ),
-				'return_value' => 'yes',
-				'default'      => 'yes',
-			)
-		);
 
 		$this->add_responsive_control(
 			'course_share_circle_size',

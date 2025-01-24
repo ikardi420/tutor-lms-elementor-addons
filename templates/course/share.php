@@ -16,6 +16,7 @@ $share_config  = array(
 );
 $section_title = $settings['course_share_section_title'];
 $share_title   = $settings['course_share_title'];
+$icon_shape    = $settings['course_share_icon_shape'];
 
 ?>
 
@@ -66,23 +67,20 @@ $share_title   = $settings['course_share_title'];
                     <input class="tutor-form-control" value="<?php echo get_permalink( get_the_ID() ); ?>" />
                 </div>
                 <div>
-                    <?php if ( '' !== $share_title ) : ?>
-						<div class="etlms-course-share-modal-link tutor-color-black tutor-fs-6 tutor-fw-medium tutor-mb-16">
-							<?php echo esc_html( $share_title ); ?>
-						</div>
-					<?php endif; ?>
-                    <div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr(wp_json_encode($share_config)); ?>">
-                        <?php foreach ($tutor_social_share_icons as $icon) : ?>
-                            <button class="tutor_share <?php echo esc_html( $icon['share_class'] ); ?> ' elementor-animation-<?php echo esc_html( $settings['course_share_hover_animation'] ); ?>" style="background: <?php echo esc_html( $icon['color'] ); ?>">
-                                <?php if ( 'yes' === $settings['course_social_icon'] ) : ?>
-                                    <?php echo $icon['icon_html']; ?>
-                                <?php endif; ?>
-                                <?php if ( 'yes' === $settings['course_social_icon_text'] ) : ?>
-                                    &nbsp;<?php echo esc_html( $icon['text'] ); ?>
-                                <?php endif; ?>
-                            </button>
-						<?php endforeach; ?>
-                    </div>
+                    <?php if ( 'yes' === $settings['course_social_icon'] ) : ?>
+                    	<?php if ( '' !== $share_title ) : ?>
+							<div class="etlms-course-share-modal-link tutor-color-black tutor-fs-6 tutor-fw-medium tutor-mb-16">
+								<?php echo esc_html( $share_title ); ?>
+							</div>
+						<?php endif; ?>
+                    	<div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr(wp_json_encode($share_config)); ?>">
+                    	    <?php foreach ($tutor_social_share_icons as $icon) : ?>
+                    	        <button class="tutor_share etlms-social-icon-<?php echo esc_html( $icon_shape ); ?> <?php echo esc_html( $icon['share_class'] ); ?> ' elementor-animation-<?php echo esc_html( $settings['course_share_hover_animation'] ); ?> tutor-social-share-button" style="background: <?php echo esc_html( $icon['color'] ); ?>">
+                    	                <?php echo $icon['icon_html']; ?>
+                    	        </button>
+							<?php endforeach; ?>
+                    	</div>
+                     <?php endif; ?>
                 </div>
             </div>
         </div>
