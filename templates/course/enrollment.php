@@ -209,7 +209,11 @@ use Tutor\Models\CourseModel;
 				// Load template based on monetization option.
 				ob_start();
 				if ( file_exists( ETLMS_TEMPLATE . 'add-to-cart-' . $tutor_course_sell_by . '.php' ) ) {
-					include ETLMS_TEMPLATE . 'add-to-cart-' . $tutor_course_sell_by . '.php';
+					if( 'tutor' === $tutor_course_sell_by ){
+						tutor_load_template( 'add-to-cart-' . $tutor_course_sell_by );	
+					} else {
+						include ETLMS_TEMPLATE . 'add-to-cart-' . $tutor_course_sell_by . '.php';
+					}
 				} else {
 					esc_html_e( $tutor_course_sell_by . ' template not found' );
 				}
